@@ -2,12 +2,12 @@
   {
    "repository":  "CyanogenMod/android_kernel_motorola_msm8974",
    "target_path": "kernel/motorola/msm8974",
-   "branch":      "cm-13.0"
+   "branch":      "cm-14.0"
   },
   {
    "repository":  "AICP/proprietary_vendor_motorola",
    "target_path": "vendor/motorola",
-   "branch":      "mm6.0"
+   "branch":      "n7.0"
   }
 ]
 
