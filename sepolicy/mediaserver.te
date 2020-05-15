@@ -13,20 +13,3 @@ allow mediaserver default_android_service:service_manager add;
 allow mediaserver hal_lineage_camera_motor_hwservice:hwservice_manager find;
 
 allow mediaserver hal_configstore_default:binder call;
-allow mediaserver device:dir r_dir_perms;
-
-add_service(mediaserver, cameraserver_service)
-add_hwservice(mediaserver, fwk_camera_hwservice)
-
-allow mediaserver sensor_privacy_service:service_manager find;
-allow mediaserver cameraproxy_service:service_manager find;
-allow mediaserver hal_camera_hwservice:hwservice_manager find;
-
-allow mediaserver persist_drm_file:dir search;
-allow mediaserver persist_drm_file:file rw_file_perms;
-
-allow mediaserver firmware_file:dir search;
-allow mediaserver firmware_file:file rx_file_perms;
-
-allow mediaserver vendor_file:dir search;
-allow mediaserver vendor_file:file { execmod };
