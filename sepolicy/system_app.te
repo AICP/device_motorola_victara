@@ -7,3 +7,7 @@ allow system_app apexd:binder call;
 allow system_app installd:binder call;
 allow system_app netd:binder call;
 allow system_app sysfs_zram:dir search;
+
+set_prop(system_app, timekeep_prop)
+r_dir_file(system_app, sysfs_timekeep)
+r_dir_file(system_app, sysfs_rtc)
