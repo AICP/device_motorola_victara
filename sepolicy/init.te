@@ -42,29 +42,9 @@ allow init proc:file { w_file_perms };
 allow init sysfs:file create_file_perms;
 allow init sysfs:dir create_dir_perms;
 
-allow init self: netlink_generic_socket {read write};
-
-allow init {
-    sysfs_wlan_fwpath
-}:file w_file_perms;
-
+# Init must be allowed to mount
 allow init {
     firmware_file
     fsg_file
     persist_file
 }:dir mounton;
-
-# Allow init to bind mount loader config for media swcodec
-allow init system_file:file mounton;
-
-allow init proc_last_kmsg:file { setattr r_file_perms };
-allow init proc_bluetooth_writable:file { setattr };
-allow init sysfs_leds:lnk_file { read };
-allow init vendor_file:file { execute_no_trans };
-allow init hwservicemanager:binder { call transfer };
-allow init hal_usb_hwservice:hwservice_manager { add };
-allow init hidl_base_hwservice:hwservice_manager { add };
-allow init system_file:file { mounton execute_no_trans };
-
-binder_call(init, system_server)
-
