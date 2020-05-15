@@ -22,16 +22,8 @@ LOCAL_SRC_FILES += \
 
 
 LOCAL_CFLAGS += \
-    -fno-short-enums \
-    -D_ANDROID_ \
-    -Wno-format \
-    -Wno-macro-redefined \
-    -Wno-missing-braces \
-    -Wno-missing-field-initializers \
-    -Wno-null-conversion \
-    -Wno-unused-const-variable \
-    -Wno-unused-parameter \
-    -Wno-unused-variable
+     -fno-short-enums \
+     -D_ANDROID_
 
 LOCAL_LDFLAGS += -Wl,--export-dynamic
 

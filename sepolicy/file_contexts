@@ -34,6 +34,7 @@
 /sys/devices/qpnp-bms-(.*)?/power_supply/bms(/.*)?  u:object_r:sysfs_power:s0
 /sys/devices/virtual/net/rmnet0(/.*)?           u:object_r:sysfs_net:s0
 /sys/power/autosleep                            u:object_r:sysfs_power:s0
+/sys/vibrator/pwmvalue                          u:object_r:vibeamp_sysfs:s0
 /sys/class/input(/.*)?                          u:object_r:sysfs_input:s0
 
 /system/vendor/bin/adspd                        u:object_r:adspd_exec:s0
@@ -51,13 +52,3 @@
 /sys/module/msm_show_resume_irq/parameters(/.*) u:object_r:sysfs_irq_debug:s0
 /sys/module/dwc3_msm/parameters(/.*)           u:object_r:sysfs_dwc_param:s0
 /sys/module/hci_uart/parameters(/.*)           u:object_r:sysfs_hci_param:s0
-
-# FSG
-/fsg(/.*)?                                                  u:object_r:fsg_file:s0
-
-# DRM
-/(vendor|system/vendor)/bin/hw/android\.hardware\.drm@1\.1-service\.widevine                u:object_r:hal_drm_widevine_exec:s0
-
-# cgroup
-/dev/cpuset(/.*)?					u:object_r:cgroup:s0
-/dev/stune(/.*)?					u:object_r:cgroup:s0

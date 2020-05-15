@@ -27,7 +27,11 @@
 #
 #
 
-import /vendor/etc/init/hw/init.mmi.rc
+import init.mmi.rc
+
+on early-init
+    mkdir /firmware 0771 system system
+    symlink /data/tombstones /tombstones
 
 on init
     write /sys/module/qpnp_rtc/parameters/poweron_alarm 1
@@ -38,7 +42,7 @@ on init
     setprop persist.sys.wfd.virtual 0
 
 on fs
-    mount_all /vendor/etc/fstab.qcom
+    mount_all fstab.qcom
 
     # Create PDS mount point
     mkdir /cache/pds 0755 root root
@@ -58,18 +62,14 @@ on fs
 
 on post-fs-data
     mkdir /data/tombstones 0771 system system
-    mkdir /data/tombstones/modem 0771 system system
-    mkdir /data/tombstones/lpass 0771 system system
-    mkdir /data/tombstones/wcnss 0771 system system
-    mkdir /data/tombstones/dsps 0771 system system
+    mkdir /tombstones/modem 0771 system system
+    mkdir /tombstones/lpass 0771 system system
+    mkdir /tombstones/wcnss 0771 system system
+    mkdir /tombstones/dsps 0771 system system
 
 on boot
     insmod /system/lib/modules/adsprpc.ko
     insmod /system/lib/modules/touchx.ko
-
-# Vibrator permissions
-    chown root system /sys/devices/virtual/timed_output/vibrator/vtg_level
-    chmod 0660 /sys/devices/virtual/timed_output/vibrator/vtg_level
 
 # Allow usb charging to be disabled persistently
 on property:persist.usb.chgdisabled=1
@@ -82,7 +82,7 @@ on property:persist.usb.chgdisabled=0
 service qcamerasvr /system/vendor/bin/mm-qcamera-daemon
     class main
     user camera
-    group camera system inet input graphics gps
+    group camera system inet input graphics
 
 on property:init.svc.media=restarting
     restart qcamerasvr

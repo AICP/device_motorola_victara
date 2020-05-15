@@ -14,8 +14,4 @@
 # limitations under the License.
 
 PRODUCT_MAKEFILES := \
-    $(LOCAL_DIR)/aicp_victara.mk
-
-COMMON_LUNCH_CHOICES := \
-    aicp_victara-eng \
-    aicp_victara-userdebug
+    $(LOCAL_DIR)/lineage_victara.mk

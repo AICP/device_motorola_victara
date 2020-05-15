@@ -27,8 +27,8 @@ TARGET_OTA_ASSERT_DEVICE := victara
 # Filesystem
 TARGET_ALLOW_LEGACY_AIDS := true
 TARGET_FS_CONFIG_GEN := \
-    device/motorola/victara/fs_config/mot_aids.fs \
-    device/motorola/victara/fs_config/config.fs
+    $(LOCAL_PATH)/fs_config/mot_aids.fs \
+    $(LOCAL_PATH)/fs_config/config.fs
 
 # Platform
 TARGET_BOARD_PLATFORM := msm8974
@@ -44,16 +44,15 @@ TARGET_ARCH := arm
 TARGET_ARCH_VARIANT := armv7-a-neon
 TARGET_CPU_ABI := armeabi-v7a
 TARGET_CPU_ABI2 := armeabi
-TARGET_CPU_VARIANT := generic
-TARGET_CPU_VARIANT_RUNTIME := krait
+TARGET_CPU_VARIANT := krait
 
 # Binder API version
 TARGET_USES_64_BIT_BINDER := true
 
 # Kernel
 BOARD_KERNEL_CMDLINE := console=none androidboot.hardware=qcom msm_rtb.filter=0x37 ehci-hcd.park=3 vmalloc=400M
-BOARD_KERNEL_CMDLINE += loop.max_part=7
 BOARD_KERNEL_BASE := 0x80200000
+BOARD_KERNEL_LZ4C_DT := true
 BOARD_KERNEL_PAGESIZE := 2048
 BOARD_KERNEL_SEPARATED_DT := true
 BOARD_MKBOOTIMG_ARGS := --ramdisk_offset 0x02000000 --tags_offset 0x01e00000
@@ -61,15 +60,6 @@ LZMA_RAMDISK_TARGETS := boot,recovery
 TARGET_KERNEL_SOURCE := kernel/motorola/msm8974
 TARGET_KERNEL_CONFIG := lineageos_victara_defconfig
 BOARD_KERNEL_IMAGE_NAME := zImage
-
-# Kernel Toolchain
-ifneq ($(wildcard $(TOP_PATH)/prebuilts/gcc/$(HOST_OS)-x86/arm/arm-eabi-4.9),)
-  KERNEL_TOOLCHAIN := $(TOP_PATH)/prebuilts/gcc/$(HOST_OS)-x86/arm/arm-eabi-4.9/bin
-  KERNEL_TOOLCHAIN_PREFIX := arm-eabi-4.9-
-endif
-
-# APEX
-TARGET_FLATTEN_APEX := true
 
 # Audio
 AUDIO_FEATURE_ENABLED_COMPRESS_VOIP := true
@@ -87,7 +77,6 @@ AUDIO_FEATURE_ENABLED_PROXY_DEVICE := true
 USE_CUSTOM_AUDIO_POLICY := 1
 BOARD_USES_GENERIC_AUDIO := true
 TARGET_USES_QCOM_MM_AUDIO := true
-USE_XML_AUDIO_POLICY_CONF := 1
 
 # Bionic
 TARGET_LD_SHIM_LIBS := \
@@ -96,15 +85,14 @@ TARGET_LD_SHIM_LIBS := \
     /system/lib/libjustshoot.so|libshim_camera.so \
     /system/lib/libjscore.so|libshim_camera.so \
     /system/lib/libmot_sensorlistener.so|libshims_sensorlistener.so \
-    /system/vendor/lib/libmdmcutback.so|libqsap_shim.so\
-    /system/vendor/lib/libperipheral_client.so|libshim_binder.so
+    /system/vendor/lib/libmdmcutback.so|libqsap_shim.so
 
 TARGET_PROCESS_SDK_VERSION_OVERRIDE += \
     /system/bin/mediaserver=22 \
     /system/vendor/bin/mm-qcamera-daemon=22
 
 # Bluetooth
-BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := device/motorola/victara/bluetooth
+BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := $(LOCAL_PATH)/bluetooth
 BOARD_HAVE_BLUETOOTH := true
 BOARD_HAVE_BLUETOOTH_QCOM := true
 BLUETOOTH_HCI_USE_MCT := true
@@ -128,13 +116,28 @@ TARGET_USES_C2D_COMPOSITION := true
 TARGET_USES_ION := true
 USE_OPENGL_RENDERER := true
 OVERRIDE_RS_DRIVER := libRSDriver_adreno.so
+SF_START_GRAPHICS_ALLOCATOR_SERVICE := true
 TARGET_ADDITIONAL_GRALLOC_10_USAGE_BITS := 0x02000000U | 0x02002000U
 
+# Shader cache config options
+# Maximum size of the  GLES Shaders that can be cached for reuse.
+# Increase the size if shaders of size greater than 12KB are used.
+MAX_EGL_CACHE_KEY_SIZE := 12*1024
+
+# Maximum GLES shader cache size for each app to store the compiled shader
+# binaries. Decrease the size if RAM or Flash Storage size is a limitation
+# of the device.
+MAX_EGL_CACHE_SIZE := 2048*1024
+
 # Fonts
-EXTENDED_FONT_FOOTPRINT := true
+EXCLUDE_SERIF_FONTS := true
+SMALLER_FONT_FOOTPRINT := true
 
 # GPS
 USE_DEVICE_SPECIFIC_GPS := true
+
+# Hardware
+BOARD_HARDWARE_CLASS := device/motorola/victara/lineagehw
 
 # HIDL
 DEVICE_MANIFEST_FILE := device/motorola/victara/configs/manifest.xml
@@ -152,24 +155,28 @@ BOARD_BOOTIMAGE_PARTITION_SIZE := 0x00A00000
 BOARD_SYSTEMIMAGE_PARTITION_SIZE := 2902458368
 BOARD_USERDATAIMAGE_PARTITION_SIZE := 10970071040
 BOARD_CACHEIMAGE_PARTITION_SIZE := 1428234240
-BOARD_ROOT_EXTRA_FOLDERS := firmware persist fsg
-BOARD_CACHEIMAGE_FILE_SYSTEM_TYPE := ext4
 
-# Radio
-TARGET_USES_OLD_MNC_FORMAT := true
+# Power
+TARGET_HAS_LEGACY_POWER_STATS := true
+TARGET_HAS_NO_WLAN_STATS := true
+TARGET_USES_INTERACTION_BOOST := true
+
+# Qualcomm support
 
 # Recovery
 BOARD_NO_SECURE_DISCARD := true
 BOARD_HAS_NO_SELECT_BUTTON := true
 BOARD_RECOVERY_SWIPE := true
 TARGET_RECOVERY_DENSITY := hdpi
-TARGET_RECOVERY_FSTAB := device/motorola/victara/rootdir/etc/fstab.qcom
+TARGET_RECOVERY_FSTAB := $(LOCAL_PATH)/rootdir/etc/fstab.qcom
 TARGET_USERIMAGES_USE_EXT4 := true
 TARGET_USERIMAGES_USE_F2FS := true
 
 # SELinux
 include device/qcom/sepolicy-legacy/sepolicy.mk
+
 BOARD_SEPOLICY_DIRS += device/motorola/victara/sepolicy
+
 BOARD_PLAT_PRIVATE_SEPOLICY_DIR += device/motorola/victara/sepolicy/private
 
 # Vendor Init
@@ -195,6 +202,5 @@ WIFI_DRIVER_FW_PATH_STA   := "sta"
 WIFI_DRIVER_FW_PATH_AP    := "ap"
 TARGET_DISABLE_WCNSS_CONFIG_COPY := true
 
-# TEMP
-BUILD_BROKEN_DUP_RULES := true
-BUILD_BROKEN_PHONY_TARGETS := true
+# Encryption
+TARGET_KEYMASTER_SKIP_WAITING_FOR_QSEE := true

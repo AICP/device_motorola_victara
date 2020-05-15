@@ -22,7 +22,7 @@
 
 #include <utils/Errors.h>
 #include <utils/RefBase.h>
-#include <log/log.h>
+#include <cutils/log.h>
 
 
 namespace android {

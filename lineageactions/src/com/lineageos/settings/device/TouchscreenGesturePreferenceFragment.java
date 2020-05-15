@@ -16,11 +16,9 @@
 
 package com.lineageos.settings.device;
 
-import android.app.ActionBar;
 import android.os.Bundle;
-import android.view.MenuItem;
-import androidx.preference.PreferenceCategory;
-import androidx.preference.PreferenceFragment;
+import android.support.v7.preference.PreferenceCategory;
+import android.support.v14.preference.PreferenceFragment;
 
 public class TouchscreenGesturePreferenceFragment extends PreferenceFragment {
     private static final String CATEGORY_AMBIENT_DISPLAY = "ambient_display_key";
@@ -28,21 +26,10 @@ public class TouchscreenGesturePreferenceFragment extends PreferenceFragment {
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.gesture_panel);
-        final ActionBar actionBar = getActivity().getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
         PreferenceCategory ambientDisplayCat = (PreferenceCategory)
                 findPreference(CATEGORY_AMBIENT_DISPLAY);
         if (ambientDisplayCat != null) {
             ambientDisplayCat.setEnabled(LineageActionsSettings.isDozeEnabled(getActivity().getContentResolver()));
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            getActivity().onBackPressed();
-            return true;
-        }
-        return false;
     }
 }

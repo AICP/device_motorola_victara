@@ -92,12 +92,8 @@ int loc_eng_nmea_put_checksum(char *pNmea, int maxSize)
         length++;
     }
 
-    // length now contains nmea sentence string length not including $ sign.
     int checksumLength = snprintf(pNmea,(maxSize-length-1),"*%02X\r\n", checksum);
-
-    // total length of nmea sentence is length of nmea sentence inc $ sign plus
-    // length of checksum (+1 is to cover the $ character in the length).
-    return (length + checksumLength + 1);
+    return (length + checksumLength);
 }
 
 /*===========================================================================
@@ -136,7 +132,6 @@ void loc_eng_nmea_generate_pos(loc_eng_data_s_type *loc_eng_data_p,
     int utcHours = pTm->tm_hour;
     int utcMinutes = pTm->tm_min;
     int utcSeconds = pTm->tm_sec;
-    int utcMSeconds = (location.gpsLocation.timestamp)%1000;
 
     if (generate_nmea) {
         // ------------------
@@ -282,8 +277,8 @@ void loc_eng_nmea_generate_pos(loc_eng_data_s_type *loc_eng_data_p,
         pMarker = sentence;
         lengthRemaining = sizeof(sentence);
 
-        length = snprintf(pMarker, lengthRemaining, "$GPRMC,%02d%02d%02d.%02d,A," ,
-                          utcHours, utcMinutes, utcSeconds,utcMSeconds/10);
+        length = snprintf(pMarker, lengthRemaining, "$GPRMC,%02d%02d%02d,A," ,
+                          utcHours, utcMinutes, utcSeconds);
 
         if (length < 0 || length >= lengthRemaining)
         {
@@ -435,8 +430,8 @@ void loc_eng_nmea_generate_pos(loc_eng_data_s_type *loc_eng_data_p,
         pMarker = sentence;
         lengthRemaining = sizeof(sentence);
 
-        length = snprintf(pMarker, lengthRemaining, "$GPGGA,%02d%02d%02d.%02d," ,
-                          utcHours, utcMinutes, utcSeconds, utcMSeconds/10);
+        length = snprintf(pMarker, lengthRemaining, "$GPGGA,%02d%02d%02d," ,
+                          utcHours, utcMinutes, utcSeconds);
 
         if (length < 0 || length >= lengthRemaining)
         {

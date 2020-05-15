@@ -70,21 +70,17 @@ void property_override_dual(const std::string& system_prop, const std::string& v
     property_override(vendor_prop, value);
 }
 
-void property_override_fingerprints(char const value[])
-{
-    property_override("ro.build.fingerprint", value);
-    property_override("ro.vendor.build.fingerprint", value);
-    property_override("ro.bootimage.build.fingerprint", value);
-    property_override("ro.odm.build.fingerprint", value);
-    property_override("ro.system.build.fingerprint", value);
-}
-
 void vendor_load_properties()
 {
     LOG(INFO) << "Loading vendor specific properties";
 
+    std::string platform;
     std::string cid;
     std::string radio;
+
+    platform = GetProperty("ro.board.platform", "");
+    if (platform != ANDROID_TARGET)
+        return;
 
     radio = GetProperty("ro.boot.radio", "");
     property_set("ro.hw.radio", radio.c_str());
@@ -100,21 +96,21 @@ void vendor_load_properties()
         /* xt1097 */
         property_override_dual("ro.product.model", "ro.vendor.product.model", "XT1097");
         property_override("ro.build.description", "victara_retca-user 5.1 LPE23.32-48.1 1 release-keys");
-        property_override_fingerprints("motorola/victara_retca/victara:5.1/LPE23.32-48.1/1:user/release-keys");
+        property_override_dual("ro.build.fingerprint", "ro.vendor.build.fingerprint", "motorola/victara_retca/victara:5.1/LPE23.32-48.1/1:user/release-keys");
         property_set("ro.telephony.default_network", "9");
         property_set("telephony.lteOnGsmDevice", "1");
     } else if (cid == "0x7") {
         /* xt1092 */
         property_override_dual("ro.product.model", "ro.vendor.product.model", "XT1092");
         property_override("ro.build.description", "victara_reteu-user 5.1 LPE23.32-25.1 1 release-keys");
-        property_override_fingerprints("motorola/victara_reteu/victara:5.1/LPE23.32-25.1/1:user/release-keys");
+        property_override_dual("ro.build.fingerprint", "ro.vendor.build.fingerprint", "motorola/victara_reteu/victara:5.1/LPE23.32-25.1/1:user/release-keys");
         property_set("ro.telephony.default_network", "9");
         property_set("telephony.lteOnGsmDevice", "1");
     } else if (cid == "0x2") {
         /* xt1096 */
         property_override_dual("ro.product.model", "ro.vendor.product.model", "XT1096");
         property_override("ro.build.description", "victara_verizon-user 5.1 LPE23.32-25-3 10 release-keys");
-        property_override_fingerprints("motorola/victara_verizon/victara:5.1/LPE23.32-25-3/10:user/release-keys");
+        property_override_dual("ro.build.fingerprint", "ro.vendor.build.fingerprint", "motorola/victara_verizon/victara:5.1/LPE23.32-25-3/10:user/release-keys");
         property_set("ro.telephony.default_network", "10");
         property_set("telephony.lteOnCdmaDevice", "1");
         property_set("ro.telephony.default_cdma_sub", "0");
@@ -124,25 +120,11 @@ void vendor_load_properties()
         property_set("ro.com.google.clientidbase.ms", "android-verizon");
         property_set("ro.com.google.clientidbase.yt", "android-verizon");
         property_set("ro.cdma.data_retry_config", "max_retries=infinite,0,0,10000,10000,100000,10000,10000,10000,10000,140000,540000,960000");
-    } else if (cid == "0x0") {
-        /* xt1094 */
-        property_override_dual("ro.product.model", "ro.vendor.product.model", "XT1094");
-        property_override("ro.build.description", "victara_repw-user 5.1 LPE23.32-39-R-42 14 release-keys");
-        property_override_fingerprints("motorola/victara_repw/victara:5.1/LPE23.32-39-R-42/14:user/release-keys");
-        property_set("ro.telephony.default_network", "8");
-        property_set("telephony.lteOnCdmaDevice", "1");
-        property_set("ro.cdma.home.operator.alpha", "Republic");
-        property_set("ro.cdma.home.operator.numeric", "310000");
-        property_set("ro.telephony.default_cdma_sub", "1");
-        property_set("ril.subscription.types", "NV,RUIM");
-        property_set("ro.com.google.clientidbase.am", "android-sprint-mvno-us");
-        property_set("ro.com.google.clientidbase.ms", "android-sprint-mvno-us");
-        property_set("ro.com.google.clientidbase.yt", "android-sprint-mvno-us");
     } else if (cid == "0x9") {
         /* xt1093 */
         property_override_dual("ro.product.model", "ro.vendor.product.model", "XT1093");
         property_override("ro.build.description", "victara_usc-user 5.1 LPE23.32-21.7 1 release-keys");
-        property_override_fingerprints("motorola/victara_usc/victara:5.1/LPE23.32-21.7/1:user/release-keys");
+        property_override_dual("ro.build.fingerprint", "ro.vendor.build.fingerprint", "motorola/victara_usc/victara:5.1/LPE23.32-21.7/1:user/release-keys");
         property_set("ro.telephony.default_network", "10");
         property_set("telephony.lteOnCdmaDevice", "1");
         property_set("ro.com.google.clientidbase.am", "android-uscellular-us");
@@ -152,7 +134,7 @@ void vendor_load_properties()
         /* all others */
         property_override_dual("ro.product.model", "ro.vendor.product.model", "XT1095");
         property_override("ro.build.description", "victara_tmo-user 5.1 LPE23.32-21.3 5 release-keys");
-        property_override_fingerprints("motorola/victara_tmo/victara:5.1/LPE23.32-21.3/5:user/release-keys");
+        property_override_dual("ro.build.fingerprint", "ro.vendor.build.fingerprint", "motorola/victara_tmo/victara:5.1/LPE23.32-21.3/5:user/release-keys");
         property_set("ro.telephony.default_network", "9");
         property_set("telephony.lteOnGsmDevice", "1");
     }

@@ -1,10 +1,16 @@
 # Moto USB configuration
-import /vendor/etc/init/hw/init.mmi.usb.rc
+import init.mmi.usb.rc
 
 on early-init
     # Set boot up stage I/O scheduler
     write /sys/block/mmcblk0/queue/scheduler noop
     write /sys/block/mmcblk0/queue/read_ahead_kb 512
+
+    # Create modem FSG mount point
+    mkdir /fsg 755 root root
+
+    chown system system /sys/kernel/debug
+    chmod 0770 /sys/kernel/debug
 
 on init
     copy /module_hashes /sys/kernel/module_whitelist
@@ -176,7 +182,16 @@ on boot
     chown audio audio /sys/devices/c55_ctrl/gpio_reset/value
     mkdir /data/adspd/ 0770 audio diag
 
-        # Adaptive LMK
+    # ACDB file path
+    setprop persist.audio.calfile0 /etc/acdbdata/${ro.hw.device}/${ro.hw.device}_Bluetooth_cal.acdb
+    setprop persist.audio.calfile1 /etc/acdbdata/${ro.hw.device}/${ro.hw.device}_General_cal.acdb
+    setprop persist.audio.calfile2 /etc/acdbdata/${ro.hw.device}/${ro.hw.device}_Global_cal.acdb
+    setprop persist.audio.calfile3 /etc/acdbdata/${ro.hw.device}/${ro.hw.device}_Handset_cal.acdb
+    setprop persist.audio.calfile4 /etc/acdbdata/${ro.hw.device}/${ro.hw.device}_Hdmi_cal.acdb
+    setprop persist.audio.calfile5 /etc/acdbdata/${ro.hw.device}/${ro.hw.device}_Headset_cal.acdb
+    setprop persist.audio.calfile6 /etc/acdbdata/${ro.hw.device}/${ro.hw.device}_Speaker_cal.acdb
+
+    # Adaptive LMK
     write /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk 1
     write /sys/module/lowmemorykiller/parameters/vmpressure_file_min 53059
 
@@ -209,7 +224,7 @@ on property:tcmd.suspend=2
 
 service tcmd /system/bin/tcmd
     class core
-    group root
+    group oem_5004 radio oem_5001 input system log camera graphics oem_5000 sdcard_r sdcard_rw audio inet bluetooth wifi compass net_bt_admin oem_9006 oem_5007 mount net_raw net_admin media shell oem_9002 nfc fm_radio qcom_diag oem_5014 cache media_rw
     socket local_tcmd stream 0660 oem_5004 oem_5004
     socket batch_socket stream 0600 oem_5004 oem_5004
     oneshot
@@ -262,7 +277,7 @@ service diag_mdlog /system/bin/diag_mdlog-wrap
     class main
     socket mdlog_cmd stream 0660 system diag
     user log
-    group log sdcard_rw sdcard_r media_rw
+    group log sdcard_rw sdcard_r media_rw qcom_diag
     disabled
 
 service dropboxd /system/bin/dropboxd

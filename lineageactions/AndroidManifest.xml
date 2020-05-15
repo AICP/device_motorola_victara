@@ -12,6 +12,10 @@
 
     <protected-broadcast android:name="com.android.systemui.doze.pulse" />
 
+    <uses-sdk
+        android:minSdkVersion="21"
+        android:targetSdkVersion="21" />
+
     <application
         android:allowBackup="true"
         android:label="@string/device_settings_app_name"
@@ -30,16 +34,6 @@
             </intent-filter>
         </service>
 
-        <service
-            android:name=".TouchscreenGestureTile"
-            android:label="@string/actions_title"
-            android:icon="@drawable/ic_settings_gestures"
-            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
-            <intent-filter>
-                <action android:name="android.service.quicksettings.action.QS_TILE" />
-            </intent-filter>
-       </service>
-
         <activity
                   android:excludeFromRecents="true"
                   android:name="LineageActions"
@@ -54,14 +48,14 @@
 
         <activity
             android:name=".TouchscreenGesturePreferenceActivity"
-            android:label="@string/actions_title"
+            android:label="@string/screen_gestures_panel_title"
             android:theme="@style/LineageActions" >
             <intent-filter>
-                <action android:name="com.android.settings.action.IA_SETTINGS" />
+                <action android:name="com.android.settings.action.EXTRA_SETTINGS" />
             </intent-filter>
             <meta-data
                 android:name="com.android.settings.category"
-                android:value="com.android.settings.category.ia.system" />
+                android:value="com.android.settings.category.device" />
             <meta-data
                 android:name="com.android.settings.icon"
                 android:resource="@drawable/ic_settings_gestures" />
