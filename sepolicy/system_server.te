@@ -8,16 +8,3 @@ allow system_server sysfs_light:file rw_file_perms;
 allow system_server sysfs_power:file rw_file_perms;
 
 allow system_server sensors_device:chr_file r_file_perms;
-allow system_server proc:file { getattr open read };
-
-allow system_server proc_last_kmsg:file r_file_perms;
-allow system_server init:binder { call transfer };
-allow system_server unlabeled:file { unlink };
-allow system_server crash_dump:process { getpgid };
-allow system_server default_android_service:service_manager { add };
-
-# examine battery state
-r_dir_file(system_server, sysfs_usb_supply);
-
-allow system_server self:process execmem;
-allow system_server sysfs_livedisplay_tuneable:file write;
