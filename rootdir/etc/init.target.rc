@@ -38,7 +38,7 @@ on init
     setprop persist.sys.wfd.virtual 0
 
 on fs
-    mount_all /vendor/etc/fstab.qcom
+    mount_all /vendor/etc/fstab.qcom --early
 
     # Create PDS mount point
     mkdir /cache/pds 0755 root root
@@ -56,6 +56,20 @@ on fs
 
     restorecon_recursive /persist
 
+    # Start HW service manager early
+    start hwservicemanager
+
+on late-fs
+    # Start services for Boot Animation
+    start servicemanager
+    start surfaceflinger
+    start bootanim
+    start configstore-hal-1-0
+    start gralloc-2-0
+
+    # Mount RW partitions which need run fsck
+    mount_all /vendor/etc/fstab.qcom --late
+
 on post-fs-data
     mkdir /data/tombstones 0771 system system
     mkdir /data/tombstones/modem 0771 system system
@@ -67,7 +81,7 @@ on boot
     insmod /system/lib/modules/adsprpc.ko
     insmod /system/lib/modules/touchx.ko
 
-# Vibrator permissions
+    # Vibrator
     chown root system /sys/devices/virtual/timed_output/vibrator/vtg_level
     chmod 0660 /sys/devices/virtual/timed_output/vibrator/vtg_level
 
@@ -90,7 +104,7 @@ on property:init.svc.media=restarting
 on property:init.svc.servicemanager=restarting
     restart qcamerasvr
 
-service qseecomd /system/vendor/bin/qseecomd
+service vendor.qseecomd /system/vendor/bin/qseecomd
    class core
    user root
    group root
@@ -111,6 +125,7 @@ service time_daemon /system/vendor/bin/time_daemon
    class late_start
    user system
    group net_raw
+   writepid /dev/cpuset/system-background/tasks
 
 service adsprpcd /system/vendor/bin/adsprpcd
    class main
@@ -122,6 +137,7 @@ service wcnss-service /system/bin/wcnss_service
     user system
     group system wifi oem_2950 diag radio
     oneshot
+    writepid /dev/cpuset/system-background/tasks
 
 on property:init.svc.surfaceflinger=stopped
     stop ppd
