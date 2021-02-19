@@ -36,6 +36,7 @@ public class TorchAction implements SensorAction {
 
     public TorchAction(Context mContext, int vibratorPeriod) {
         mCameraManager = (CameraManager) mContext.getSystemService(Context.CAMERA_SERVICE);
+        mCameraManager.registerTorchCallback(new MyTorchCallback(), null);
         mVibrator = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
         mVibratorPeriod = vibratorPeriod;
         try {
