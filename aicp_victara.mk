@@ -16,8 +16,16 @@ PRODUCT_MODEL := victara
 PRODUCT_RELEASE_NAME := MOTO X (2014)
 PRODUCT_MANUFACTURER := motorola
 
+PRODUCT_BUILD_PROP_OVERRIDES += \
+    PRODUCT_NAME="MOTO X (2014)" \
+    TARGET_DEVICE="victara" \
+    PRIVATE_BUILD_DESC="victara_tmo-user 5.1 LPE23.32-21.3 5 release-keys"
+
 PRODUCT_GMS_CLIENTID_BASE := android-motorola
 
 # AICP Device Maintainers
 PRODUCT_BUILD_PROP_OVERRIDES += \
     DEVICE_MAINTAINERS="Jeferson Oliveira (jro1979oliver)"
+
+PRODUCT_OVERRIDE_INFO := true
+PRODUCT_OVERRIDE_FINGERPRINT :=	motorola/victara_tmo/victara:5.1/LPE23.32-21.3/5:user/release-keys
