@@ -22,6 +22,9 @@ ro.qualcomm.bluetooth.sap=false
 ro.bluetooth.hfp.ver=1.7
 ro.boot.btmacaddr=00:00:00:00:00:00
 
+# DRM
+drm.service.enabled=true
+
 # Qualcomm® aptX™
 persist.bt.enableAptXHD=true \
 persist.service.btui.use_aptx=1 \
